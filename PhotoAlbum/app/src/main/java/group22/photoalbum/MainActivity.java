@@ -20,6 +20,7 @@ import android.text.InputType;
 import android.content.DialogInterface;
 import android.content.Context;
 import java.util.ArrayList;
+import android.content.Intent;
 import group22.photoalbum.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -121,6 +122,21 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
+        albumNames.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ThumbnailViewActivity.class);
+                intent.putExtra("index", position);
+                startActivity(intent);
+            }
+
+        });
+
+
+
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

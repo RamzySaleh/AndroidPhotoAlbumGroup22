@@ -25,14 +25,14 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import android.widget.ImageView;
-
+import android.graphics.Bitmap;
 
 public class Photo implements Serializable {
 	
 	/**
 	 * 
 	 */
-	ImageView image;
+	Bitmap image;
 	String caption = "";
     private Map<String, ArrayList<String>> tagsHashTable = new HashMap<>();
 
@@ -152,10 +152,10 @@ public class Photo implements Serializable {
 		}
 	}
 	
-	public ImageView getImage() {
+	public Bitmap getImage() {
 		return image;
 	}
-	public void setImage(ImageView image) {
+	public void setImage(Bitmap image) {
 		this.image = image;
 	}
 	public String getCaption() {
