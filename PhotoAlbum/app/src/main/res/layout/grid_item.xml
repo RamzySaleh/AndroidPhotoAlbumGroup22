@@ -7,6 +7,7 @@
     <ImageView
         android:id="@+id/image"
         android:gravity="center"
+        android:paddingTop="3px"
         android:layout_gravity="center"
         android:layout_width="70dp"
         android:layout_height="70dp" />
@@ -17,6 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
+        android:maxLines="1"
+        android:paddingLeft="3px"
+        android:paddingRight="3px"
         android:textSize="10sp" />
 
 </LinearLayout>

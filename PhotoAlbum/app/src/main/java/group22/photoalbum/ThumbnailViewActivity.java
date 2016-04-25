@@ -27,6 +27,7 @@ import android.graphics.drawable.BitmapDrawable;
 import java.io.File;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.widget.TextView;
 
 
 /**
@@ -59,6 +60,9 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
         int index = getIntent().getIntExtra("index", 0);
         currentAlbum = MainActivity.albums.get(index);
+
+        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +108,8 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
                     currentAlbum.addOnePhoto(photoToAdd);
                     gridView.setAdapter(adapter);
+                    TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+                    toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
 
         }
     }
