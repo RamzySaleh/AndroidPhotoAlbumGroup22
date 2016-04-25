@@ -1,6 +1,7 @@
 package group22.photoalbum;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +29,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
     private GridView gridView;
     private ThumbnailAdapter gridViewAdapter;
+    private Album currentAlbum;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +41,25 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
         gridView.setAdapter(adapter);
 
+        int index = getIntent().getIntExtra("index", 0);
+        currentAlbum = MainActivity.albums.get(index);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Allow user to select photo
+
+                // Add to current album
+
+            }
+        });
     }
 
     private ArrayList getPhotos(){
         int index = getIntent().getIntExtra("index", 0);
-        return MainActivity.albums.get(0).getPhotos();
+        return MainActivity.albums.get(index).getPhotos();
     }
 
 
