@@ -120,15 +120,31 @@ public class MainActivity extends AppCompatActivity {
 
                 final EditText input = new EditText(context);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
+
                 builder.setView(input);
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        userResponse = input.getText().toString();
-                        Album albumToAdd = new Album(userResponse);
-                        albums.add(albumToAdd);
-                        arrayAdapter = new ArrayAdapter<Album>(context,R.layout.album,albums);
-                        albumNames.setAdapter(arrayAdapter);
+                        if(input.getText().toString().trim().isEmpty()){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Invalid");
+                            alert.setMessage("Must input at least one character");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    return;
+                                }
+                            });
+                            alert.show();
+
+                        }
+                        else {
+                            userResponse = input.getText().toString();
+                            Album albumToAdd = new Album(userResponse);
+                            albums.add(albumToAdd);
+                            arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, albums);
+                            albumNames.setAdapter(arrayAdapter);
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
