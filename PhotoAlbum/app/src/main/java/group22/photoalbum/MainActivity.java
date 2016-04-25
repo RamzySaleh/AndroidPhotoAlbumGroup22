@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         builder.setView(input);
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                if(findAlbumName(input.getText().toString().toLowerCase()) != 0){
+                                if(findAlbumName(input.getText().toString().toLowerCase()) != -1){
                                     AlertDialog.Builder alert = new AlertDialog.Builder(context);
                                     alert.setTitle("Duplicate");
                                     alert.setMessage("Album name already exists. Try again");
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                             alert.show();
 
                         }
-                        else if(findAlbumName(input.getText().toString().toLowerCase()) != 0){
+                        else if(findAlbumName(input.getText().toString().toLowerCase()) != -1){
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setTitle("Duplicate");
                             alert.setMessage("Album name already exists. Try again");
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 
     @Override
