@@ -21,7 +21,6 @@ public class Album implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	String name;
-	int numOfPhotos;
 	ArrayList<Photo> photos = new ArrayList<Photo>();
 
 	
@@ -35,10 +34,7 @@ public class Album implements Serializable {
 		this.name = name;
 	}
 	public int getNumOfPhotos() {
-		return numOfPhotos;
-	}
-	public void setNumOfPhotos(int numOfPhotos) {
-		this.numOfPhotos = numOfPhotos;
+		return photos.size();
 	}
 	public ArrayList<Photo> getPhotos() {
 		return photos;
