@@ -25,6 +25,9 @@ import android.net.Uri;
 import android.widget.ImageView;
 import android.graphics.drawable.BitmapDrawable;
 import java.io.File;
+import android.content.Context;
+import android.content.CursorLoader;
+
 
 /**
  *
@@ -93,8 +96,10 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                     Photo photoToAdd = new Photo();
                     photoToAdd.setImage(selectedImageGal);
 
-                    File f = new File("" + selectedImage);
-                    photoToAdd.setCaption(f.getName());
+                    File f = new File(selectedImage.getPath());
+                    String pathID = f.getAbsolutePath();
+                    String filename = pathToFileName(pathID);
+                    photoToAdd.setCaption(filename);
 
 
                     currentAlbum.addOnePhoto(photoToAdd);
@@ -103,6 +108,29 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         }
     }
 
+    private String pathToFileName(String pathID){
+
+        String id = pathID.split(":")[1];
+        String[] column = {MediaStore.Images.Media.DATA};
+        String selector = MediaStore.Images.Media._ID + "=?";
+
+        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,  column,
+                                        selector, new String[]{id}, null);
+
+        String filePath = "/not found";
+        int columnIndex = 0;
+        if (cursor != null) cursor.getColumnIndex(column[0]);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+        }
+
+        if (cursor != null) cursor.close();
+
+        String filename = filePath.substring(filePath.lastIndexOf('/')+1);
+        return filename;
+
+    }
 
 
     private ArrayList getPhotos(){
