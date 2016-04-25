@@ -70,10 +70,36 @@ public class MainActivity extends AppCompatActivity {
                                 arrayAdapter.remove(arrayAdapter.getItem(position2));
                                 arrayAdapter.insert(album,position2);
                                 albumNames.setAdapter(arrayAdapter);
+                                edit.setVisibility(View.INVISIBLE);
+                                delete.setVisibility(View.INVISIBLE);
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                edit.setVisibility(View.INVISIBLE);
+                                delete.setVisibility(View.INVISIBLE);
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+                delete.setOnClickListener(new View.OnClickListener(){
+                    public void onClick(View v){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Are you sure you want to delete album "+arrayAdapter.getItem(position2).getName()+"?");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                arrayAdapter.remove(arrayAdapter.getItem(position2));
+                                albumNames.setAdapter(arrayAdapter);
+                                edit.setVisibility(View.INVISIBLE);
+                                delete.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                edit.setVisibility(View.INVISIBLE);
+                                delete.setVisibility(View.INVISIBLE);
                                 dialog.cancel();
                             }
                         });
