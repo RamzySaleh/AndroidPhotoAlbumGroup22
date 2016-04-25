@@ -79,11 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else {
                                     userResponse = input.getText().toString();
-                                    Album album = new Album(userResponse);
-                                    arrayAdapter.remove(arrayAdapter.getItem(position2));
-                                    arrayAdapter.insert(album, position2);
-                                    albums.remove(position2);
-                                    albums.add(position2, album);
+                                    albums.get(position2).setName(userResponse);
                                     albumNames.setAdapter(arrayAdapter);
                                     edit.setVisibility(View.INVISIBLE);
                                     delete.setVisibility(View.INVISIBLE);
@@ -107,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 albums.remove(position2);
-                                arrayAdapter.remove(arrayAdapter.getItem(position2));
                                 albumNames.setAdapter(arrayAdapter);
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
