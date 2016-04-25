@@ -1,11 +1,15 @@
 package group22.photoalbum;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.view.Menu;
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<Album> albums = new ArrayList<Album>();
     ListView albumNames;
     ArrayAdapter<Album> arrayAdapter;
+    int selectedListItem = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +38,51 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        selectedListItem = getIntent().getIntExtra("PositionInList", -1);
         albumNames = (ListView)findViewById(R.id.photo_list);
+        albumNames.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        albumNames.setSelection(0);
 
+        albumNames.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
+            FloatingActionButton edit = (FloatingActionButton) findViewById(R.id.edit);
+            FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                final int position2 = position;
+                albumNames.requestFocusFromTouch();
+                albumNames.setSelection(position);
+                edit.setVisibility(View.VISIBLE);
+                delete.setVisibility(View.VISIBLE);
+                edit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Edit album name");
+
+                        final EditText input = new EditText(context);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builder.setView(input);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                userResponse = input.getText().toString();
+                                Album album = new Album(userResponse);
+                                arrayAdapter.remove(arrayAdapter.getItem(position2));
+                                arrayAdapter.insert(album,position2);
+                                albumNames.setAdapter(arrayAdapter);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+                return true;
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
