@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<Album> albums = new ArrayList<Album>();
     ListView albumNames;
     ArrayAdapter<Album> arrayAdapter;
-    int selectedListItem = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        selectedListItem = getIntent().getIntExtra("PositionInList", -1);
+
         albumNames = (ListView)findViewById(R.id.photo_list);
         albumNames.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         albumNames.setSelection(0);
@@ -58,20 +58,36 @@ public class MainActivity extends AppCompatActivity {
 
                     public void onClick(View v) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("Edit album name");
+                        builder.setTitle("Edit album name "+arrayAdapter.getItem(position2).getName());
 
                         final EditText input = new EditText(context);
                         input.setInputType(InputType.TYPE_CLASS_TEXT);
                         builder.setView(input);
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                userResponse = input.getText().toString();
-                                Album album = new Album(userResponse);
-                                arrayAdapter.remove(arrayAdapter.getItem(position2));
-                                arrayAdapter.insert(album,position2);
-                                albumNames.setAdapter(arrayAdapter);
-                                edit.setVisibility(View.INVISIBLE);
-                                delete.setVisibility(View.INVISIBLE);
+                                if(findAlbumName(input.getText().toString().toLowerCase()) != 0){
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                                    alert.setTitle("Duplicate");
+                                    alert.setMessage("Album name already exists. Try again");
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            return;
+                                        }
+                                    });
+                                    alert.show();
+                                }
+                                else {
+                                    userResponse = input.getText().toString();
+                                    Album album = new Album(userResponse);
+                                    arrayAdapter.remove(arrayAdapter.getItem(position2));
+                                    arrayAdapter.insert(album, position2);
+                                    albums.remove(position2);
+                                    albums.add(position2, album);
+                                    albumNames.setAdapter(arrayAdapter);
+                                    edit.setVisibility(View.INVISIBLE);
+                                    delete.setVisibility(View.INVISIBLE);
+                                }
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -90,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         builder.setTitle("Are you sure you want to delete album "+arrayAdapter.getItem(position2).getName()+"?");
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                albums.remove(position2);
                                 arrayAdapter.remove(arrayAdapter.getItem(position2));
                                 albumNames.setAdapter(arrayAdapter);
                                 edit.setVisibility(View.INVISIBLE);
@@ -138,6 +155,18 @@ public class MainActivity extends AppCompatActivity {
                             alert.show();
 
                         }
+                        else if(findAlbumName(input.getText().toString().toLowerCase()) != 0){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Duplicate");
+                            alert.setMessage("Album name already exists. Try again");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    return;
+                                }
+                            });
+                            alert.show();
+                        }
                         else {
                             userResponse = input.getText().toString();
                             Album albumToAdd = new Album(userResponse);
@@ -157,6 +186,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public int findAlbumName(String name){
+
+        for(int i = 0; i < albums.size(); i++) {
+            if(albums.get(i).getName().equalsIgnoreCase(name)){
+                return i;
+            }
+        }
+        return 0;
     }
 
     @Override
