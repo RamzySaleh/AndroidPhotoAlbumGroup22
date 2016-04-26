@@ -13,14 +13,15 @@ package group22.photoalbum;
 	
 import java.io.*;
 import java.util.ArrayList;
-
+import android.os.Environment;
+import android.util.Log;
 
 public class PhotoAlbum implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final String storeDir = "data";
+	public static final String storeDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
 	public static final String storeFile = "users.dat";
 	public static ArrayList<Album> albums = new ArrayList<Album>();
 
@@ -48,7 +49,7 @@ public class PhotoAlbum implements Serializable {
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 			oos.writeObject(pa);
-			
+			Log.i("save","saved to disk!");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         pa = PhotoAlbum.loadFromDisk();
-        if(pa == null) pa = new PhotoAlbum();
+        if(pa == null) {
+            Log.i("save","nothing found!");
+            pa = new PhotoAlbum();
+        }
+        Log.i("save","on create started!");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -48,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         albumNames = (ListView)findViewById(R.id.photo_list);
         albumNames.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         albumNames.setSelection(0);
+        arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, PhotoAlbum.albums);
+        albumNames.setAdapter(arrayAdapter);
+
 
         albumNames.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
