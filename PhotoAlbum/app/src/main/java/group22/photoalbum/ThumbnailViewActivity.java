@@ -1,5 +1,8 @@
 package group22.photoalbum;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -47,6 +50,8 @@ public class ThumbnailViewActivity extends AppCompatActivity {
     private Album currentAlbum;
     private static final int SELECT_PHOTO = 1;
     private ThumbnailAdapter adapter;
+    Context context = this;
+
 
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +68,47 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
+        //Deleting a photo
 
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+
+
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                gridView.requestFocusFromTouch();
+                final int position2 = position;
+                delete.setVisibility(View.VISIBLE);
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Delete");
+                        builder.setMessage("Are you sure you want to delete this photo?");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                MainActivity.pa.albums.get(getIntent().getIntExtra("index", 0)).getPhotos().remove(position2);
+                                adapter = new ThumbnailAdapter(context, getPhotos());
+                                gridView.setAdapter(adapter);
+                                delete.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                delete.setVisibility(View.INVISIBLE);
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show();
+
+                    }
+                });
+
+                return false;
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

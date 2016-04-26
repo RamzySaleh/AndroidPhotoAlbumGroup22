@@ -26,7 +26,7 @@ public class ThumbnailAdapter extends ArrayAdapter {
     private Context context;
     private ArrayList data;
 
-    public ThumbnailAdapter(Activity context, ArrayList data){
+    public ThumbnailAdapter(Context context, ArrayList data){
         super(context, R.layout.grid_item, data);
         this.context = context;
         this.data = data;
