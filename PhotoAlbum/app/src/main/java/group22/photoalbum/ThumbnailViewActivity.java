@@ -59,7 +59,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         gridView.setAdapter(adapter);
 
         int index = getIntent().getIntExtra("index", 0);
-        currentAlbum = MainActivity.albums.get(index);
+        currentAlbum = PhotoAlbum.albums.get(index);
 
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
@@ -107,6 +107,8 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
 
                     currentAlbum.addOnePhoto(photoToAdd);
+                    PhotoAlbum.saveToDisk(MainActivity.pa);
+
                     gridView.setAdapter(adapter);
                     TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
                     toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
@@ -141,7 +143,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
     private ArrayList getPhotos(){
         int index = getIntent().getIntExtra("index", 0);
-        return MainActivity.albums.get(index).getPhotos();
+        return PhotoAlbum.albums.get(index).getPhotos();
     }
 
 

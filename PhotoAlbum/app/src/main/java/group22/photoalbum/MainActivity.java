@@ -22,23 +22,28 @@ import android.content.Context;
 import java.util.ArrayList;
 import android.content.Intent;
 import group22.photoalbum.R;
+import android.widget.TextView;
+
 
 public class MainActivity extends AppCompatActivity {
 
     final Context context = this;
     String userResponse;
-    static ArrayList<Album> albums = new ArrayList<Album>();
     ListView albumNames;
     ArrayAdapter<Album> arrayAdapter;
-
+    public static PhotoAlbum pa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        pa = PhotoAlbum.loadFromDisk();
+        if(pa == null) pa = new PhotoAlbum();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        TextView toolbar = (TextView) findViewById(R.id.toolbar_title);
 
+        toolbar.setText("Albums");
 
         albumNames = (ListView)findViewById(R.id.photo_list);
         albumNames.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -80,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else {
                                     userResponse = input.getText().toString();
-                                    albums.get(position2).setName(userResponse);
+                                    PhotoAlbum.albums.get(position2).setName(userResponse);
+                                    PhotoAlbum.saveToDisk(pa);
                                     albumNames.setAdapter(arrayAdapter);
                                     edit.setVisibility(View.INVISIBLE);
                                     delete.setVisibility(View.INVISIBLE);
@@ -103,7 +109,8 @@ public class MainActivity extends AppCompatActivity {
                         builder.setTitle("Are you sure you want to delete album "+arrayAdapter.getItem(position2).getName()+"?");
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                albums.remove(position2);
+                                PhotoAlbum.albums.remove(position2);
+                                PhotoAlbum.saveToDisk(pa);
                                 albumNames.setAdapter(arrayAdapter);
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
@@ -132,10 +139,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-
-
-
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -181,8 +184,9 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             userResponse = input.getText().toString();
                             Album albumToAdd = new Album(userResponse);
-                            albums.add(albumToAdd);
-                            arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, albums);
+                            PhotoAlbum.albums.add(albumToAdd);
+                            PhotoAlbum.saveToDisk(pa);
+                            arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, PhotoAlbum.albums);
                             albumNames.setAdapter(arrayAdapter);
                         }
                     }
@@ -201,33 +205,14 @@ public class MainActivity extends AppCompatActivity {
 
     public int findAlbumName(String name){
 
-        for(int i = 0; i < albums.size(); i++) {
-            if(albums.get(i).getName().equalsIgnoreCase(name)){
+        for(int i = 0; i < PhotoAlbum.albums.size(); i++) {
+            if(PhotoAlbum.albums.get(i).getName().equalsIgnoreCase(name)){
                 return i;
             }
         }
         return -1;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
