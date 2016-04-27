@@ -47,8 +47,6 @@ public class SlideshowActivity extends AppCompatActivity {
     int delselection;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -109,6 +107,7 @@ public class SlideshowActivity extends AppCompatActivity {
                         });
                         dialog.show();
                         return true;
+
                     case R.id.delete_tag:
                         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle("Pick tag to delete");

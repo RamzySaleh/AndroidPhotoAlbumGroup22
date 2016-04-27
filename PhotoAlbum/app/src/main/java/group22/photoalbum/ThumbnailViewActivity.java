@@ -51,6 +51,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
     private static final int SELECT_PHOTO = 1;
     private ThumbnailAdapter adapter;
     Context context = this;
+    TextView toolbarTitle;
 
 
     protected void onCreate(final Bundle savedInstanceState) {
@@ -67,17 +68,17 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         currentAlbum = PhotoAlbum.albums.get(index);
         final int albumIndex = index;
 
-        TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
         //Deleting a photo
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
 
-
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 gridView.requestFocusFromTouch();
                 final int position2 = position;
+                gridView.setSelection(position);
                 delete.setVisibility(View.VISIBLE);
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -92,6 +93,8 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                                 MainActivity.pa.albums.get(getIntent().getIntExtra("index", 0)).getPhotos().remove(position2);
                                 adapter = new ThumbnailAdapter(context, getPhotos());
                                 gridView.setAdapter(adapter);
+                                toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
+                                PhotoAlbum.saveToDisk(MainActivity.pa);
                                 delete.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -107,7 +110,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                     }
                 });
 
-                return false;
+                return true;
             }
         });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -144,6 +147,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         if(resultCode == RESULT_OK){
+
                     Uri selectedImage = imageReturnedIntent.getData();
 
                     ImageView iv = new ImageView(this);
