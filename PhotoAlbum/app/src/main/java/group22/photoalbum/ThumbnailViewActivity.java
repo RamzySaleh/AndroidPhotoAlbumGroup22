@@ -65,6 +65,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
         int index = getIntent().getIntExtra("index", 0);
         currentAlbum = PhotoAlbum.albums.get(index);
+        final int albumIndex = index;
 
         TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
@@ -124,6 +125,16 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                 // Add to current album
 
             }
+        });
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ThumbnailViewActivity.this, SlideshowActivity.class);
+                intent.putExtra("album_index", albumIndex);
+                intent.putExtra("photo_index", position);
+                startActivity(intent);
+            }
+
         });
     }
 
