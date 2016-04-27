@@ -1,5 +1,6 @@
 package group22.photoalbum;
 
+import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +25,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import android.content.Intent;
 import group22.photoalbum.R;
+
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
@@ -148,7 +152,51 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        FloatingActionButton search = (FloatingActionButton) findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.searchphotos_dialog);
+                dialog.setTitle("Find Photos by Tag");
+
+                Button searchTag = (Button) dialog.findViewById(R.id.dialogSearch);
+                Button cancel = (Button) dialog.findViewById(R.id.dialogCancel);
+                searchTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText tagValue = (EditText) dialog.findViewById(R.id.tagValue);
+                        Spinner tagType = (Spinner) dialog.findViewById(R.id.dialog_spinner);
+                        if(tagValue.getText().toString().trim().isEmpty()){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Invalid");
+                            alert.setMessage("Must input at least one character");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    return;
+                                }
+                            });
+                            alert.show();
+                        }
+                        else {
+
+
+                        }
+
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
+            }
+        });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +204,10 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Enter album name.");
+                FloatingActionButton edit = (FloatingActionButton) findViewById(R.id.edit);
+                FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+                edit.setVisibility(View.INVISIBLE);
+                delete.setVisibility(View.INVISIBLE);
 
                 final EditText input = new EditText(context);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
