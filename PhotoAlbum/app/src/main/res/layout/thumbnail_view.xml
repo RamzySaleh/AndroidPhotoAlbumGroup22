@@ -71,4 +71,15 @@
         android:tint="@android:color/white"
         android:src="@android:drawable/ic_delete" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/movealbum"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:paddingTop="100dp"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@android:color/white"
+        android:src="@android:drawable/ic_menu_set_as" />
+
 </android.support.design.widget.CoordinatorLayout>

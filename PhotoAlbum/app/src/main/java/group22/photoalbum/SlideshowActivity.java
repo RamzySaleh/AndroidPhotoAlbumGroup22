@@ -41,6 +41,7 @@ public class SlideshowActivity extends AppCompatActivity {
     Album currentAlbum;
     Photo currentPhoto;
     ListView tagsList;
+    ListView albumList;
     ArrayAdapter<String> arrayAdapterTags;
     final Context context = this;
     String selectedDelItem;
@@ -163,7 +164,6 @@ public class SlideshowActivity extends AppCompatActivity {
 
         currentAlbum = PhotoAlbum.albums.get(albumindex);
         currentPhoto = PhotoAlbum.albums.get(albumindex).getPhotos().get(photoindex);
-
         FloatingActionButton leftButton = (FloatingActionButton) findViewById(R.id.leftarrow);
         leftButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -52,6 +52,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
     private ThumbnailAdapter adapter;
     Context context = this;
     TextView toolbarTitle;
+    int selection;
 
 
     protected void onCreate(final Bundle savedInstanceState) {
@@ -74,12 +75,52 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+            FloatingActionButton moveAlbum = (FloatingActionButton) findViewById(R.id.movealbum);
 
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 gridView.requestFocusFromTouch();
                 final int position2 = position;
                 gridView.setSelection(position);
                 delete.setVisibility(View.VISIBLE);
+                moveAlbum.setVisibility(View.VISIBLE);
+                moveAlbum.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        AlertDialog.Builder moveAlbumDialog = new AlertDialog.Builder(context);
+                        moveAlbumDialog.setTitle("Move Photo to Album:");
+                        moveAlbumDialog.setSingleChoiceItems(albumNames(), -1, new DialogInterface.OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                selection = which;
+                            }
+                        });
+
+                        moveAlbumDialog.setPositiveButton("Move", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                Photo photoToAdd = MainActivity.pa.albums.get(getIntent().getIntExtra("index", 0)).getPhotos().get(position2);
+                                MainActivity.pa.albums.get(selection).addOnePhoto(photoToAdd);
+                                MainActivity.pa.albums.get(getIntent().getIntExtra("index", 0)).getPhotos().remove(position2);
+                                adapter = new ThumbnailAdapter(context, getPhotos());
+                                gridView.setAdapter(adapter);
+                                toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
+                                PhotoAlbum.saveToDisk(MainActivity.pa);
+                                delete.setVisibility(View.INVISIBLE);
+                                moveAlbum.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
+                        moveAlbumDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                delete.setVisibility(View.INVISIBLE);
+                                moveAlbum.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
+                        moveAlbumDialog.show();
+                    }
+                });
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -96,12 +137,14 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                                 toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
                                 PhotoAlbum.saveToDisk(MainActivity.pa);
                                 delete.setVisibility(View.INVISIBLE);
+                                moveAlbum.setVisibility(View.INVISIBLE);
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 delete.setVisibility(View.INVISIBLE);
+                                moveAlbum.setVisibility(View.INVISIBLE);
                                 dialog.cancel();
                             }
                         });
@@ -204,6 +247,14 @@ public class ThumbnailViewActivity extends AppCompatActivity {
     private ArrayList getPhotos(){
         int index = getIntent().getIntExtra("index", 0);
         return PhotoAlbum.albums.get(index).getPhotos();
+    }
+
+    private String[] albumNames() {
+        String[] albumNames = new String[MainActivity.pa.albums.size()];
+        for(int i = 0; i < MainActivity.pa.albums.size(); i++){
+            albumNames[i] = MainActivity.pa.albums.get(i).getName();
+        }
+        return albumNames;
     }
 
 
