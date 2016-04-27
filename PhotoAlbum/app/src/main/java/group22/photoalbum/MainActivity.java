@@ -181,7 +181,23 @@ public class MainActivity extends AppCompatActivity {
                             alert.show();
                         }
                         else {
+                            String type = tagType.getSelectedItem().toString();
+                            String value = tagValue.getText().toString();
 
+                            if(type.equals("location")){
+                                for(int i = 0; i < pa.albums.size(); i++){
+                                    for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                                        //create new method for tags with location key under photo
+                                    }
+                                }
+                            }
+                            else {
+                                for(int i = 0; i < pa.albums.size(); i++){
+                                    for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                                        //create new method for tags with person key under photo
+                                    }
+                                }
+                            }
 
                         }
 
