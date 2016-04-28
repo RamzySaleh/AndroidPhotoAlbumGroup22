@@ -45,6 +45,9 @@ public class Album implements Serializable {
 	public void addOnePhoto(Photo photo){
 		photos.add(photo);
 	}
+	public void clear(){
+		photos.clear();
+	}
 	public String toString(){
 		return name;
 	}

@@ -195,12 +195,9 @@ public class MainActivity extends AppCompatActivity {
                 searchTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PhotoAlbum.searchResults.clear();
                         EditText tagValue = (EditText) dialog.findViewById(R.id.tagValue);
                         Spinner tagType = (Spinner) dialog.findViewById(R.id.dialog_spinner);
-                        Album results = new Album("results");
-                        if(PhotoAlbum.albums.contains(results)){
-                            PhotoAlbum.albums.remove(results);
-                        }
                         if(tagValue.getText().toString().trim().isEmpty()){
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setTitle("Invalid");
@@ -219,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                             if(type.equals("location")){
+
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line, allLocationTags);
                                 textView.setAdapter(adapter);
                                 for(int i = 0; i < pa.albums.size(); i++){
@@ -226,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                                         ArrayList<String> location = pa.albums.get(i).getPhotos().get(x).locationTags();
                                         if(location.isEmpty()) break;
                                         if(location.contains(value)){
-                                            results.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                            PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
                                         }
                                         //create new method for tags with location key under photo
                                     }
@@ -242,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                                         String[] PERSON  = new String[person.size()];
                                         PERSON  = person.toArray(PERSON);
                                         if(person.contains(value)){
-                                            results.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                            PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
                                         }
                                         //create new method for tags with person key under photo
                                     }
@@ -251,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        if(results.getNumOfPhotos() == 0){
+                        if(PhotoAlbum.searchResults.getNumOfPhotos() == 0){
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setTitle("Search empty");
                             alert.setMessage("No matches found");
@@ -264,9 +262,8 @@ public class MainActivity extends AppCompatActivity {
                             alert.show();
                         }
                         else {
-                            pa.albums.add(results);
                             Intent intent = new Intent(MainActivity.this, ResultsViewActivity.class);
-                            intent.putExtra("index", pa.albums.size()-1);
+                            intent.putExtra("index", 0);
                             startActivity(intent);
                         }
 

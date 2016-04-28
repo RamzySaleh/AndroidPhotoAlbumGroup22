@@ -65,9 +65,7 @@ public class ResultsViewActivity extends AppCompatActivity {
 
         gridView.setAdapter(adapter);
 
-        int index = PhotoAlbum.albums.size()-1;
-        currentAlbum = PhotoAlbum.albums.get(index);
-        final int albumIndex = index;
+        currentAlbum = PhotoAlbum.searchResults;
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText(currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
@@ -135,8 +133,7 @@ public class ResultsViewActivity extends AppCompatActivity {
 
 
     private ArrayList getPhotos(){
-        int index = PhotoAlbum.albums.size()-1;
-        return PhotoAlbum.albums.get(index).getPhotos();
+        return PhotoAlbum.searchResults.getPhotos();
     }
 
     private String[] albumNames() {

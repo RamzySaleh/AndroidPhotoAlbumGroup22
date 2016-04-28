@@ -24,6 +24,7 @@ public class PhotoAlbum implements Serializable {
 	public static final String storeDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
 	public static final String storeFile = "users.dat";
 	public static ArrayList<Album> albums = new ArrayList<Album>();
+	public static Album searchResults = new Album("results");
 
 	
 	public static PhotoAlbum loadFromDisk(){
