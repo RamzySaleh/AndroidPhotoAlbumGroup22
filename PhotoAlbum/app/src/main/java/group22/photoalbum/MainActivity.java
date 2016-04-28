@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.view.Menu;
@@ -65,12 +66,15 @@ public class MainActivity extends AppCompatActivity {
 
             FloatingActionButton edit = (FloatingActionButton) findViewById(R.id.edit);
             FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
+            FloatingActionButton search = (FloatingActionButton) findViewById(R.id.search);
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final int position2 = position;
                 albumNames.requestFocusFromTouch();
                 albumNames.setSelection(position);
                 edit.setVisibility(View.VISIBLE);
                 delete.setVisibility(View.VISIBLE);
+                search.setVisibility(View.INVISIBLE);
+
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override
 
@@ -160,15 +164,33 @@ public class MainActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.searchphotos_dialog);
                 dialog.setTitle("Find Photos by Tag");
-
+                final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.tagValue);
                 Button searchTag = (Button) dialog.findViewById(R.id.dialogSearch);
                 Button cancel = (Button) dialog.findViewById(R.id.dialogCancel);
+                //Grab all possible location tags
+                final ArrayList<String> allLocationTags = new ArrayList<String>();
+                final ArrayList<String> allPersonTags = new ArrayList<String>();
+                for(int i = 0; i < pa.albums.size(); i++){
+                    for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                        if(pa.albums.get(i).getPhotos().get(x).locationTags() == null) continue;
+                        allLocationTags.addAll(pa.albums.get(i).getPhotos().get(x).locationTags());
+                    }
+                }
+                for(int i = 0; i < pa.albums.size(); i++){
+                    for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                        if(pa.albums.get(i).getPhotos().get(x).personTags() == null) continue;
+                        allPersonTags.addAll(pa.albums.get(i).getPhotos().get(x).personTags());
+                    }
+                }
                 searchTag.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EditText tagValue = (EditText) dialog.findViewById(R.id.tagValue);
                         Spinner tagType = (Spinner) dialog.findViewById(R.id.dialog_spinner);
                         Album results = new Album("results");
+                        if(PhotoAlbum.albums.contains(results)){
+                            PhotoAlbum.albums.remove(results);
+                        }
                         if(tagValue.getText().toString().trim().isEmpty()){
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setTitle("Invalid");
@@ -187,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                             if(type.equals("location")){
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line, allLocationTags);
+                                textView.setAdapter(adapter);
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
                                         ArrayList<String> location = pa.albums.get(i).getPhotos().get(x).locationTags();
@@ -199,10 +223,14 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             else {
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line, allPersonTags);
+                                textView.setAdapter(adapter);
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
                                         ArrayList<String> person = pa.albums.get(i).getPhotos().get(x).personTags();
                                         if(person.isEmpty()) break;
+                                        String[] PERSON  = new String[person.size()];
+                                        PERSON  = person.toArray(PERSON);
                                         if(person.contains(value)){
                                             results.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
                                         }
@@ -231,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtra("index", pa.albums.size()-1);
                             startActivity(intent);
                         }
+
 
                     }
                 });

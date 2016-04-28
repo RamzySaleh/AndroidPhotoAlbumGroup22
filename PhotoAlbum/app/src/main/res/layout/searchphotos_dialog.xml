@@ -31,7 +31,7 @@
 
     </LinearLayout>
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/tagValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
