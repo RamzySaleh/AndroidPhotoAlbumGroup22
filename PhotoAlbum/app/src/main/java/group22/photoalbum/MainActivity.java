@@ -164,9 +164,11 @@ public class MainActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.searchphotos_dialog);
                 dialog.setTitle("Find Photos by Tag");
+
                 final AutoCompleteTextView textView = (AutoCompleteTextView) dialog.findViewById(R.id.tagValue);
                 Button searchTag = (Button) dialog.findViewById(R.id.dialogSearch);
                 Button cancel = (Button) dialog.findViewById(R.id.dialogCancel);
+                Spinner tagType = (Spinner) dialog.findViewById(R.id.dialog_spinner);
                 //Grab all possible location tags
                 final ArrayList<String> allLocationTags = new ArrayList<String>();
                 final ArrayList<String> allPersonTags = new ArrayList<String>();
@@ -181,6 +183,14 @@ public class MainActivity extends AppCompatActivity {
                         if(pa.albums.get(i).getPhotos().get(x).personTags() == null) continue;
                         allPersonTags.addAll(pa.albums.get(i).getPhotos().get(x).personTags());
                     }
+                }
+                if(tagType.getSelectedItem().toString().trim().equals("location")) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line, allLocationTags);
+                    textView.setAdapter(adapter);
+                }
+                else {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.simple_dropdown_item_1line, allPersonTags);
+                    textView.setAdapter(adapter);
                 }
                 searchTag.setOnClickListener(new View.OnClickListener() {
                     @Override
