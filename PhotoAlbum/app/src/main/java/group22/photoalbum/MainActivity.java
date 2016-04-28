@@ -226,16 +226,10 @@ public class MainActivity extends AppCompatActivity {
                             alert.show();
                         }
                         else {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                            alert.setTitle("Search");
-                            alert.setMessage("MATCHES FOUND");
-                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    return;
-                                }
-                            });
-                            alert.show();
+                            pa.albums.add(results);
+                            Intent intent = new Intent(MainActivity.this, ResultsViewActivity.class);
+                            intent.putExtra("index", pa.albums.size()-1);
+                            startActivity(intent);
                         }
 
                     }
