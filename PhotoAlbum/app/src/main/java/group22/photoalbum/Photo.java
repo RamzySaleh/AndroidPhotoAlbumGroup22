@@ -98,7 +98,14 @@ public class Photo implements Serializable {
 
 		}
 	}
-	
+	public ArrayList<String> personTags(){
+		ArrayList<String> person = tagsHashTable.get("person");
+		return person;
+	}
+	public ArrayList<String> locationTags(){
+		ArrayList<String> location = tagsHashTable.get("location");
+		return location;
+	}
 	public Bitmap getImage() {
 		return image;
 	}

@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         EditText tagValue = (EditText) dialog.findViewById(R.id.tagValue);
                         Spinner tagType = (Spinner) dialog.findViewById(R.id.dialog_spinner);
+                        Album results = new Album("results");
                         if(tagValue.getText().toString().trim().isEmpty()){
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setTitle("Invalid");
@@ -182,11 +183,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else {
                             String type = tagType.getSelectedItem().toString();
-                            String value = tagValue.getText().toString();
+                            String value = tagValue.getText().toString().toLowerCase();
+
 
                             if(type.equals("location")){
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                                        ArrayList<String> location = pa.albums.get(i).getPhotos().get(x).locationTags();
+                                        if(location.isEmpty()) break;
+                                        if(location.contains(value)){
+                                            results.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                        }
                                         //create new method for tags with location key under photo
                                     }
                                 }
@@ -194,11 +201,41 @@ public class MainActivity extends AppCompatActivity {
                             else {
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
+                                        ArrayList<String> person = pa.albums.get(i).getPhotos().get(x).personTags();
+                                        if(person.isEmpty()) break;
+                                        if(person.contains(value)){
+                                            results.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                        }
                                         //create new method for tags with person key under photo
                                     }
                                 }
                             }
 
+                        }
+
+                        if(results.getNumOfPhotos() == 0){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Search empty");
+                            alert.setMessage("No matches found");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    return;
+                                }
+                            });
+                            alert.show();
+                        }
+                        else {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Search");
+                            alert.setMessage("MATCHES FOUND");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    return;
+                                }
+                            });
+                            alert.show();
                         }
 
                     }

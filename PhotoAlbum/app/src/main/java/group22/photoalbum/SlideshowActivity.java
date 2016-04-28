@@ -93,7 +93,7 @@ public class SlideshowActivity extends AppCompatActivity {
                                     alert.show();
                                 } else {
                                     Log.i("tag type", tagType.getSelectedItem().toString());
-                                    currentPhoto.addTag(tagType.getSelectedItem().toString().trim(),tagValue.getText().toString());
+                                    currentPhoto.addTag(tagType.getSelectedItem().toString().trim(),tagValue.getText().toString().toLowerCase());
                                     populateListView();
                                     PhotoAlbum.saveToDisk(MainActivity.pa);
                                     dialog.dismiss();
