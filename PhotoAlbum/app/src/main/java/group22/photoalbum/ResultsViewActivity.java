@@ -1,35 +1,18 @@
 package group22.photoalbum;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.GridView;
-import android.view.Menu;
-import android.widget.Adapter;
-import android.view.MenuItem;
 import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import java.io.InputStream;
-import android.net.Uri;
 import android.widget.ImageView;
 import android.graphics.drawable.BitmapDrawable;
 import java.io.File;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.widget.TextView;
 
 
@@ -98,7 +81,7 @@ public class ResultsViewActivity extends AppCompatActivity {
 
 
             currentAlbum.addOnePhoto(photoToAdd);
-            PhotoAlbum.saveToDisk(MainActivity.pa);
+            MainActivity.pa.saveToDisk(context);
 
             gridView.setAdapter(adapter);
             TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);

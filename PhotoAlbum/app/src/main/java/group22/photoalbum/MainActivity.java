@@ -1,23 +1,15 @@
 package group22.photoalbum;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.app.AlertDialog;
 import android.widget.EditText;
 import android.text.InputType;
@@ -25,8 +17,6 @@ import android.content.DialogInterface;
 import android.content.Context;
 import java.util.ArrayList;
 import android.content.Intent;
-import group22.photoalbum.R;
-
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,12 +32,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        pa = PhotoAlbum.loadFromDisk();
+        pa = PhotoAlbum.loadFromDisk(this);
         if(pa == null) {
-            Log.i("save","nothing found!");
             pa = new PhotoAlbum();
         }
-        Log.i("save","on create started!");
+
+        if (pa.albums == null) {
+            pa.albums = new ArrayList<Album>();
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -58,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         albumNames = (ListView)findViewById(R.id.photo_list);
         albumNames.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         albumNames.setSelection(0);
-        arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, PhotoAlbum.albums);
+        arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, pa.albums);
         albumNames.setAdapter(arrayAdapter);
 
 
@@ -101,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else {
                                     userResponse = input.getText().toString();
-                                    PhotoAlbum.albums.get(position2).setName(userResponse);
-                                    PhotoAlbum.saveToDisk(pa);
+                                    pa.albums.get(position2).setName(userResponse);
+                                    pa.saveToDisk(context);
                                     albumNames.setAdapter(arrayAdapter);
                                     edit.setVisibility(View.INVISIBLE);
                                     delete.setVisibility(View.INVISIBLE);
@@ -127,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                         builder.setTitle("Are you sure you want to delete album "+arrayAdapter.getItem(position2).getName()+"?");
                         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                PhotoAlbum.albums.remove(position2);
-                                PhotoAlbum.saveToDisk(pa);
+                                pa.albums.remove(position2);
+                                pa.saveToDisk(context);
                                 albumNames.setAdapter(arrayAdapter);
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
@@ -333,9 +325,9 @@ public class MainActivity extends AppCompatActivity {
                         else {
                             userResponse = input.getText().toString();
                             Album albumToAdd = new Album(userResponse);
-                            PhotoAlbum.albums.add(albumToAdd);
-                            PhotoAlbum.saveToDisk(pa);
-                            arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, PhotoAlbum.albums);
+                            pa.albums.add(albumToAdd);
+                            pa.saveToDisk(context);
+                            arrayAdapter = new ArrayAdapter<Album>(context, R.layout.album, pa.albums);
                             albumNames.setAdapter(arrayAdapter);
                         }
                     }
@@ -354,8 +346,8 @@ public class MainActivity extends AppCompatActivity {
 
     public int findAlbumName(String name){
 
-        for(int i = 0; i < PhotoAlbum.albums.size(); i++) {
-            if(PhotoAlbum.albums.get(i).getName().equalsIgnoreCase(name)){
+        for(int i = 0; i < pa.albums.size(); i++) {
+            if(pa.albums.get(i).getName().equalsIgnoreCase(name)){
                 return i;
             }
         }

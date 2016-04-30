@@ -5,7 +5,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
-import android.app.Activity;
 import android.content.Context;
 import java.util.ArrayList;
 import android.view.*;
