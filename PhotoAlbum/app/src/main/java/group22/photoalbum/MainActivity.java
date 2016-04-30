@@ -223,6 +223,14 @@ public class MainActivity extends AppCompatActivity {
                                         if(location.contains(value)){
                                             PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
                                         }
+                                        else {
+                                            for(int r = 0; r < location.size(); r++){
+                                                if(location.get(r).startsWith(value)){
+                                                    PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                                }
+                                            }
+
+                                        }
                                         //create new method for tags with location key under photo
                                     }
                                 }
@@ -239,6 +247,14 @@ public class MainActivity extends AppCompatActivity {
                                         PERSON  = person.toArray(PERSON);
                                         if(person.contains(value)){
                                             PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                        }
+                                        else {
+                                            for(int r = 0; r < person.size(); r++){
+                                                if(person.get(r).startsWith(value)){
+                                                    PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                                }
+                                            }
+
                                         }
                                         //create new method for tags with person key under photo
                                     }
