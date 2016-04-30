@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                                             for(int r = 0; r < location.size(); r++){
                                                 if(location.get(r).startsWith(value)){
                                                     PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                                    break;
                                                 }
                                             }
 
@@ -252,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
                                             for(int r = 0; r < person.size(); r++){
                                                 if(person.get(r).startsWith(value)){
                                                     PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
+                                                    break;
                                                 }
                                             }
 
