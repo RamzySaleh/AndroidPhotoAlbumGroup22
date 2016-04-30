@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                     albumNames.setAdapter(arrayAdapter);
                                     edit.setVisibility(View.INVISIBLE);
                                     delete.setVisibility(View.INVISIBLE);
+                                    search.setVisibility(View.VISIBLE);
                                 }
                             }
                         });
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
+                                search.setVisibility(View.VISIBLE);
                                 dialog.cancel();
                             }
                         });
@@ -130,12 +132,14 @@ public class MainActivity extends AppCompatActivity {
                                 albumNames.setAdapter(arrayAdapter);
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
+                                search.setVisibility(View.VISIBLE);
                             }
                         });
                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 edit.setVisibility(View.INVISIBLE);
                                 delete.setVisibility(View.INVISIBLE);
+                                search.setVisibility(View.VISIBLE);
                                 dialog.cancel();
                             }
                         });
@@ -222,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
                                         ArrayList<String> location = pa.albums.get(i).getPhotos().get(x).locationTags();
+                                        if(location == null) break;
                                         if(location.isEmpty()) break;
                                         if(location.contains(value)){
                                             PhotoAlbum.searchResults.addOnePhoto(pa.albums.get(i).getPhotos().get(x));
@@ -236,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                                 for(int i = 0; i < pa.albums.size(); i++){
                                     for(int x = 0; x < pa.albums.get(i).getPhotos().size(); x++){
                                         ArrayList<String> person = pa.albums.get(i).getPhotos().get(x).personTags();
+                                        if(person == null) break;
                                         if(person.isEmpty()) break;
                                         String[] PERSON  = new String[person.size()];
                                         PERSON  = person.toArray(PERSON);
