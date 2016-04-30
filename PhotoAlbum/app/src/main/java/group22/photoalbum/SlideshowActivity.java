@@ -13,11 +13,10 @@ package group22.photoalbum;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.transition.Slide;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,8 +32,8 @@ import android.app.Dialog;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.view.View.OnClickListener;
-
+import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
+import android.util.Log;
 
 public class SlideshowActivity extends AppCompatActivity {
 
@@ -54,9 +53,24 @@ public class SlideshowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.slideshow_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 
         toolbar.inflateMenu(R.menu.slideshow_menu);
+
+        final int albumindex = getIntent().getIntExtra("album_index", 0);
+        final int photoindex = getIntent().getIntExtra("photo_index", 0);
+
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SlideshowActivity.this, ThumbnailViewActivity.class);
+                intent.putExtra("index", albumindex);
+                startActivity(intent);
+            }
+        });
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -92,10 +106,9 @@ public class SlideshowActivity extends AppCompatActivity {
                                     });
                                     alert.show();
                                 } else {
-                                    Log.i("tag type", tagType.getSelectedItem().toString());
                                     currentPhoto.addTag(tagType.getSelectedItem().toString().trim(),tagValue.getText().toString().toLowerCase());
                                     populateListView();
-                                    PhotoAlbum.saveToDisk(MainActivity.pa);
+                                    MainActivity.pa.saveToDisk(context);
                                     dialog.dismiss();
                                 }
                             }
@@ -128,19 +141,17 @@ public class SlideshowActivity extends AppCompatActivity {
 
                                 if (keyValueTogether().length == 0) {
                                     populateListView();
-                                    Log.i("Key value together", String.valueOf(keyValueTogether().length));
                                     return;
                                 }
 
                                 String keyValueToDel = keyValueTogether()[delselection];
 
-                                Log.i("keyvalue to delete", keyValueToDel);
                                 String[] parts = keyValueToDel.split(":");
                                 String key = parts[0];
                                 String value = parts[1].substring(1);
 
                                 currentPhoto.removeTag(key, value);
-                                PhotoAlbum.saveToDisk(MainActivity.pa);
+                                MainActivity.pa.saveToDisk(context);
                                 populateListView();
                             }
                         })
@@ -159,11 +170,8 @@ public class SlideshowActivity extends AppCompatActivity {
         });
 
 
-        final int albumindex = getIntent().getIntExtra("album_index", 0);
-        final int photoindex = getIntent().getIntExtra("photo_index", 0);
-
-        currentAlbum = PhotoAlbum.albums.get(albumindex);
-        currentPhoto = PhotoAlbum.albums.get(albumindex).getPhotos().get(photoindex);
+        currentAlbum = MainActivity.pa.albums.get(albumindex);
+        currentPhoto = MainActivity.pa.albums.get(albumindex).getPhotos().get(photoindex);
         FloatingActionButton leftButton = (FloatingActionButton) findViewById(R.id.leftarrow);
         leftButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

@@ -1,36 +1,25 @@
 package group22.photoalbum;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.GridView;
-import android.view.Menu;
-import android.widget.Adapter;
-import android.view.MenuItem;
 import java.util.ArrayList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import java.io.InputStream;
-import android.net.Uri;
 import android.widget.ImageView;
 import android.graphics.drawable.BitmapDrawable;
 import java.io.File;
 import android.content.Context;
 import android.content.ContentResolver;
-import android.content.CursorLoader;
 import android.widget.TextView;
 
 
@@ -67,12 +56,24 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         gridView.setAdapter(adapter);
 
         int index = getIntent().getIntExtra("index", 0);
-        currentAlbum = PhotoAlbum.albums.get(index);
+        currentAlbum = MainActivity.pa.albums.get(index);
         final int albumIndex = index;
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+
 
         toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
         //Deleting a photo
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ThumbnailViewActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.delete);
@@ -104,7 +105,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                                 adapter = new ThumbnailAdapter(context, getPhotos());
                                 gridView.setAdapter(adapter);
                                 toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
-                                PhotoAlbum.saveToDisk(MainActivity.pa);
+                                MainActivity.pa.saveToDisk(context);
                                 delete.setVisibility(View.INVISIBLE);
                                 moveAlbum.setVisibility(View.INVISIBLE);
                             }
@@ -136,7 +137,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
                                 adapter = new ThumbnailAdapter(context, getPhotos());
                                 gridView.setAdapter(adapter);
                                 toolbarTitle.setText("Album: "+currentAlbum.getName()+" - "+currentAlbum.getNumOfPhotos()+" photo(s)");
-                                PhotoAlbum.saveToDisk(MainActivity.pa);
+                                MainActivity.pa.saveToDisk(context);
                                 delete.setVisibility(View.INVISIBLE);
                                 moveAlbum.setVisibility(View.INVISIBLE);
                             }
@@ -211,7 +212,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
 
                     currentAlbum.addOnePhoto(photoToAdd);
-                    PhotoAlbum.saveToDisk(MainActivity.pa);
+                    MainActivity.pa.saveToDisk(context);
 
                     gridView.setAdapter(adapter);
                     TextView toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
@@ -249,7 +250,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
     private ArrayList getPhotos(){
         int index = getIntent().getIntExtra("index", 0);
-        return PhotoAlbum.albums.get(index).getPhotos();
+        return MainActivity.pa.albums.get(index).getPhotos();
     }
 
     private String[] albumNames() {
