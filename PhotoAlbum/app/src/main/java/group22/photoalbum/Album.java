@@ -12,14 +12,12 @@ package group22.photoalbum;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-import group22.photoalbum.Photo;
-
 public class Album implements Serializable {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 0L;
 	String name;
 	ArrayList<Photo> photos = new ArrayList<Photo>();
 

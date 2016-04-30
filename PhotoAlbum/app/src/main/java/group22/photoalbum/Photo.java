@@ -10,30 +10,21 @@ package group22.photoalbum;
  * 
  */
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
-import android.widget.ImageView;
 import android.graphics.Bitmap;
-import android.util.Log;
+import android.graphics.BitmapFactory;
+import java.io.*;
 
 public class Photo implements Serializable {
 	
 	/**
 	 * 
 	 */
-	Bitmap image;
+	private static final long serialVersionUID = 0L;
+	transient Bitmap image;
 	String caption = "";
     private Map<String, ArrayList<String>> tagsHashTable = new HashMap<>();
 
@@ -119,4 +110,26 @@ public class Photo implements Serializable {
 		this.caption = caption;
 	}
 
+
+	private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+		ois.defaultReadObject();
+		int b;
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		while((b = ois.read()) != -1)
+			byteStream.write(b);
+		byte bitmapBytes[] = byteStream.toByteArray();
+		image = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+	}
+
+	private void writeObject(ObjectOutputStream oos) throws IOException {
+		oos.defaultWriteObject();
+		if(image != null){
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			image.compress(Bitmap.CompressFormat.PNG, 0, byteStream);
+			byte bitmapBytes[] = byteStream.toByteArray();
+			oos.write(bitmapBytes, 0, bitmapBytes.length);
+		}
+	}
+
 }
+

@@ -13,44 +13,50 @@ package group22.photoalbum;
 	
 import java.io.*;
 import java.util.ArrayList;
-import android.os.Environment;
-import android.util.Log;
+import android.content.Context;
 
 public class PhotoAlbum implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	public static final String storeDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-	public static final String storeFile = "users.dat";
-	public static ArrayList<Album> albums = new ArrayList<Album>();
+	private static final long serialVersionUID = 0L;
+	public static final String fileName = "photoalbum.ser";
+	public ArrayList<Album> albums;
 	public static Album searchResults = new Album("results");
 
 	
-	public static PhotoAlbum loadFromDisk(){
-		ObjectInputStream ois = null;
+	public static PhotoAlbum loadFromDisk(Context context){
 		PhotoAlbum pa = null;
 		try {
-			ois = new ObjectInputStream(new FileInputStream(storeDir + File.separator + storeFile));
-			pa = (PhotoAlbum)ois.readObject();
+			FileInputStream fis = context.openFileInput(fileName);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			pa = (PhotoAlbum) ois.readObject();
+
+			if (pa.albums == null) {
+				pa.albums = new ArrayList<Album>();
+			}
+			fis.close();
+			ois.close();
 		} catch (FileNotFoundException e) {
 			return null;
 		} catch (IOException e) {
 			return null;
 		} catch (ClassNotFoundException e) {
-			try { ois.close(); } catch (IOException e1) {}
+			return null;
+		} catch (Exception e) {
 			return null;
 		}
-		try { ois.close(); } catch (IOException e1) {}
 		return pa;
 	}
 	
-	public static void saveToDisk(PhotoAlbum pa){
+	public void saveToDisk(Context context){
 		ObjectOutputStream oos;
 		try {
-			oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
-			oos.writeObject(pa);
-			Log.i("save","saved to disk!");
+			FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+			objectOutputStream.writeObject(this);
+			objectOutputStream.close();
+			fileOutputStream.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
