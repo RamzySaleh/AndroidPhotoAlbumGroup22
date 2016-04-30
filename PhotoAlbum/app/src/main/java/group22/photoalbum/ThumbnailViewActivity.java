@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.graphics.drawable.BitmapDrawable;
 import java.io.File;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.widget.TextView;
 
@@ -205,7 +206,7 @@ public class ThumbnailViewActivity extends AppCompatActivity {
 
                     File f = new File(selectedImage.getPath());
                     String pathID = f.getAbsolutePath();
-                    String filename = pathToFileName(pathID);
+                    String filename = pathToFileName(selectedImage);
                     photoToAdd.setCaption(filename);
 
 
@@ -219,26 +220,28 @@ public class ThumbnailViewActivity extends AppCompatActivity {
         }
     }
 
-    private String pathToFileName(String pathID){
+    private String pathToFileName(Uri selectedImage){
 
-        String id = pathID.split(":")[1];
-        String[] column = {MediaStore.Images.Media.DATA};
-        String selector = MediaStore.Images.Media._ID + "=?";
 
-        Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,  column,
-                                        selector, new String[]{id}, null);
+        String filename = "not found";
 
-        String filePath = "/not found";
-        int columnIndex = 0;
-        if (cursor != null) cursor.getColumnIndex(column[0]);
+        String[] column = {MediaStore.MediaColumns.DISPLAY_NAME};
 
-        if (cursor != null && cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex);
+        ContentResolver contentResolver = getApplicationContext().getContentResolver();
+
+        Cursor cursor = contentResolver.query(selectedImage, column,
+                                            null, null, null);
+
+        if(cursor != null) {
+           try {
+               if (cursor.moveToFirst()){
+                   filename = cursor.getString(0);
+               }
+           } catch (Exception e){
+
+            }
         }
 
-        if (cursor != null) cursor.close();
-
-        String filename = filePath.substring(filePath.lastIndexOf('/')+1);
         return filename;
 
     }
